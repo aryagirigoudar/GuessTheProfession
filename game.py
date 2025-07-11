@@ -1,6 +1,6 @@
 import pygame
-
-
+from audio import AudioRecorder
+import threading
 
 class GameThread:
     """
@@ -21,6 +21,7 @@ class GameThread:
         self.font = pygame.font.SysFont("Arial", 28)
         self.white = (255, 255, 255)
         self.black = (0, 0, 0)
+        self.audio_recorder = AudioRecorder()
     
     def start(self):
         while self.RUN:
@@ -50,6 +51,18 @@ class GameThread:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.RUN = False
-            elif event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:
                 if event.key in [pygame.K_ESCAPE, pygame.K_q]:
                     self.RUN = False
+                if event.key == pygame.K_SPACE:
+                    print("Audio recording started. Press SPACE to stop.")
+                    self.audio_recorder_thread = threading.Thread(target=self.audio_recorder.record_audio)
+                    self.audio_recorder.RUN = True
+                    self.audio_recorder_thread.start()
+            
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_SPACE:
+                    self.audio_recorder.RUN = False
+                    print("Audio recording stopped.")
+                    self.audio_recorder_thread.join()
+            
