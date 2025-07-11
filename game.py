@@ -1,0 +1,55 @@
+import pygame
+
+
+
+class GameThread:
+    """
+    Main game thread for the Guess the Profession game.
+    Initializes the game and runs the main loop.
+    """
+
+    def __init__(self, window_size=(800, 800)):
+        self.RUN = True
+        self.NO_COUNT = 0
+        self.chat_user = list()
+        self.chat_participant = list()
+        self.chat_coordinator = list()
+        self.pygame = pygame
+        pygame.init()
+        self.canvas = pygame.display.set_mode(window_size)
+        pygame.display.set_caption("Guess the Profession Game")
+        self.font = pygame.font.SysFont("Arial", 28)
+        self.white = (255, 255, 255)
+        self.black = (0, 0, 0)
+    
+    def start(self):
+        while self.RUN:
+            self.canvas.fill(self.black)  # Fill background with black
+            self.check_for_events()
+
+            y_offset = 50
+            line_height = 30
+            max_height = 800
+
+            for index, message in enumerate(self.chat_user):
+                txtsurf = self.font.render(message, True, self.white)
+                self.canvas.blit(txtsurf, (10, y_offset))
+                y_offset += line_height
+
+            # If we exceed the max height, remove oldest messages
+            while y_offset > max_height and len(self.chat_user) > 0:
+                self.chat_user.pop(0)
+                y_offset -= line_height
+            pygame.display.update()  # Update the display
+
+
+    def check_for_events(self):
+        """
+        Check for pygame events and handle them.
+        """
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.RUN = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key in [pygame.K_ESCAPE, pygame.K_q]:
+                    self.RUN = False
