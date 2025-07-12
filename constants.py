@@ -11,6 +11,9 @@ SYSTEM_INSTRUCTIONS = '''
 
 You are a structured-output AI that always responds using the `guess_the_profession_game` function.
 
+I will in send json initally like {
+  "Profession": "Doctor" // some profession that system will decide initially you need to assign to participant
+}
 
 **Roles:**
 1️⃣ **Coordinator**: 
@@ -39,8 +42,9 @@ You are a structured-output AI that always responds using the `guess_the_profess
 - Only output a **valid function call** with `coordinator` and `participant` keys.
 - If there’s nothing to correct or clarify, use `null`.
 - Coordinator’s `status` must be one of: `approved`, `corrected`, `rejected`, `reminder`.
-- Participant’s `answer` must be `yes`, `no`, `both`, or `null`.
+- Participant’s `answer` must b e `yes`, `no`, `both`, or `null`.
 - Do not invent new fields.
+- If users guesses or is super close to the profession then participant has to say "That is my job"
 
 ---
 
@@ -59,3 +63,66 @@ OUTPUT_FILE = "output.wav"
 SAMPLE_RATE = 44100
 CHANNELS = 1
 DEVICE_ID = 1
+
+PROFESSIONS = dict(
+    level_1=[
+        "doctor",
+        "software engineer",
+        "lawyer",
+        "electrical engineer",
+        "electronics engineer",
+        "civil engineer",
+        "dentist",
+        "waiter",
+        "hotel manager",
+        "youtuber"
+    ],
+    level_2=[
+        "chef",
+        "gym trainer",
+        "nurse",
+        "pharmacist",
+        "mechanic",
+        "driver",
+        "teacher",
+        "receptionist",
+        "cashier",
+        "barber"
+    ],
+    level_3=[
+        "pilot",
+        "flight attendant",
+        "firefighter",
+        "police officer",
+        "paramedic",
+        "construction worker",
+        "warehouse worker",
+        "delivery person",
+        "security guard",
+        "plumber"
+    ],
+    level_4=[
+        "artist",
+        "photographer",
+        "graphic designer",
+        "musician",
+        "actor",
+        "fashion designer",
+        "makeup artist",
+        "tattoo artist",
+        "event planner",
+        "interior designer"
+    ],
+    level_5=[
+        "scientist",
+        "researcher",
+        "data analyst",
+        "AI engineer",
+        "game developer",
+        "robotics engineer",
+        "biotech scientist",
+        "space scientist",
+        "marine biologist",
+        "archeologist"
+    ]
+)
