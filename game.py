@@ -1,6 +1,7 @@
 import pygame
 from audio import AudioRecorder
 import threading
+from handle_ai import HandleAI
 
 class GameThread:
     """
@@ -21,7 +22,9 @@ class GameThread:
         self.font = pygame.font.SysFont("Arial", 28)
         self.white = (255, 255, 255)
         self.black = (0, 0, 0)
-        self.audio_recorder = AudioRecorder()
+        self.audio_recorder = None
+        self.handle_ai = HandleAI()
+        self.transcript = None
     
     def start(self):
         while self.RUN:
@@ -55,14 +58,28 @@ class GameThread:
                 if event.key in [pygame.K_ESCAPE, pygame.K_q]:
                     self.RUN = False
                 if event.key == pygame.K_SPACE:
-                    print("Audio recording started. Press SPACE to stop.")
-                    self.audio_recorder_thread = threading.Thread(target=self.audio_recorder.record_audio)
-                    self.audio_recorder.RUN = True
+                    self.audio_recorder = AudioRecorder()
+                    self.audio_recorder_thread = threading.Thread(target=self.audio_recorder.start)
                     self.audio_recorder_thread.start()
+                if event.key == pygame.K_RETURN:
+                    if self.transcript:
+                        self.chat_user.append(self.transcript)
+                        self.handle_ai.text = self.transcript
+                        self.handle_ai.get_user_question()
+                        self.transcript = None
+                        print(self.handle_ai.chat_coordinator)
+                        print(self.handle_ai.chat_participant)
+                if event.key == pygame.K_n:
+                    self.transcript = None
             
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
-                    self.audio_recorder.RUN = False
-                    print("Audio recording stopped.")
+                    self.audio_recorder.stop()
                     self.audio_recorder_thread.join()
-            
+                    self.whisper_thread = threading.Thread(target=self.handle_ai.generate_transcript, )
+                    self.handle_ai.audio_path = self.audio_recorder.file_name
+                    self.whisper_thread.start()
+                    self.whisper_thread.join()
+                    self.transcript = self.handle_ai.get_transcript()
+                    print("is this what you said?", self.transcript)
+
