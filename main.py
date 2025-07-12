@@ -2,29 +2,29 @@
 from game import GameThread
 import signal
 import sys
+from logger import logger
 
 class HandleObjectsWithCleanUp:
     def __init__(self):
         self.game_obj = GameThread()
 
     def stop(self):
-        print("\n[INFO] Graceful shutdown initiated.")
-        # ✅ Your cleanup logic here
-        print("Doing cleanup work...")
+        logger.error("\n[INFO] Graceful shutdown initiated.")
+        logger.error("Doing cleanup work...")
         self.game_obj.pygame.quit()
 
     def handle_ctrl_c(self, signum, frame):
-        print("\n[Signal] Caught Ctrl+C (SIGINT)")
+        logger.error("\n[Signal] Caught Ctrl+C (SIGINT)")
         self.stop()
         sys.exit(0)
 
     def handle_ctrl_z(self, signum, frame):
-        print("\n[Signal] Caught Ctrl+Z (SIGTSTP)")
+        logger.error("\n[Signal] Caught Ctrl+Zx (SIGTSTP)")
         self.stop()
         sys.exit(0)
 
     def run(self):
-        print("Running... Press Ctrl+C or Ctrl+Z to stop.")
+        logger.error("Running... Press Ctrl+C or Ctrl+Z to stop.")
         self.game_obj.start()
 
 if __name__ == "__main__":

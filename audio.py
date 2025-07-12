@@ -1,8 +1,8 @@
 import pyaudio
 import wave
-from constants import CHUNK, CHANNELS, RATE, RECORD_SECONDS, WAVE_OUTPUT_FILENAME
+from constants import CHUNK, CHANNELS, RATE, WAVE_OUTPUT_FILENAME
 from datetime import datetime
-import os
+from logger import logger
 
 class AudioRecorder:
     def __init__(self):
@@ -16,13 +16,15 @@ class AudioRecorder:
                              frames_per_buffer=CHUNK)
 
     def record_audio(self):
-        print("Recording...")
+        print("Recording")
+        logger.info("Recording...")
         frames = []
 
         while self.RUN:
             data = self.stream.read(CHUNK)
             frames.append(data)
 
+        logger.info("Finished recording.")
         print("Finished recording.")
 
         self.stream.stop_stream()
@@ -36,10 +38,10 @@ class AudioRecorder:
             wf.writeframes(b''.join(frames))
         
     def stop(self):
-        print("Audio recording stopped.")
+        logger.info("Audio recording stopped.")
         self.RUN = False
     
     def start(self):
-        print("Starting audio recording...")
+        logger.info("Starting audio recording...")
         self.RUN = True
         self.record_audio()
