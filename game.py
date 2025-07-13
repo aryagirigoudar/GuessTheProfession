@@ -59,7 +59,11 @@ class GameThread:
             self.check_for_events()
             self.check_for_nose()
             self.display_chat()
-            pygame.display.update()  # Update the display
+            self.check_for_win_statement()
+            pygame.display.update()
+
+    def check_for_win_statement(self):
+        pass
 
     def check_for_nose(self):
         if self.no_of_nose >= 10:
@@ -95,7 +99,7 @@ class GameThread:
             self.whisper_thread.start()
             self.whisper_thread.join()
             self.transcript = self.handle_ai.get_transcript()
-            print("is this what you said?", self.transcript)
+            print("User said: ", self.transcript)
             logger.info("User said: " + self.transcript)
     
     def handle_key_down(self, event):
