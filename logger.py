@@ -1,7 +1,7 @@
 import logging
 
 # Create a logger
-logger = logging.getLogger("my_logger")
+logger = logging.getLogger("GuessMyProfession")
 logger.setLevel(logging.DEBUG)  # Or INFO, WARNING, ERROR, CRITICAL
 
 # Create a console handler
